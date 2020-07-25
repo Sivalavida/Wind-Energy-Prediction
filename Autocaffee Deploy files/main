@@ -1,0 +1,31 @@
+\
+\ @author: terra
+\ @date: 15 Jul 2020
+\
+\ A brief description of this program.
+\
+
+terra/ac
+\ don't alter 
+project: P003
+
+\ IMPORTANT: Change this password to match your team's.
+\ DO not share this with anyone outside your team!
+password: 5462587109
+
+\ IMPORTANT: this path needs to match the project used for your NN in P003.
+model-proj: P003-lab5
+
+\ IMPORTANT: change this to match your best config: 
+model-config: 36
+
+\ Paths to extraction/preprocessing/post-processing scripts.
+extract: data.m
+prep: prep.m
+pre: pre.m
+post: post.m
+
+
+
+
+

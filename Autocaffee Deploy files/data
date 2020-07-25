@@ -1,0 +1,104 @@
+\
+\ @author: Arnold Doray
+\ @date: 19 July 2020
+\
+\ IMPORTANT: You should edit this file. 
+\
+
+terra/data  \ data access into the dengue and other datasets.
+terra/stats \ statistical functions like average, sd, etc. 
+
+\ The name of your data extraction job. 
+job: P003/lab-3
+
+\ Where to save the results. 
+\ do not amend the filename.
+result: data.csv
+
+: nearest-hour ( t -- t ) { t0 } 
+  t0 year t0 month t0 day t0 hour ymdh
+;
+
+: time-column ( t0 t1 -- # ) { t1 } 
+  #sorted { h }
+  nearest-hour \ normalize t0 to nearest hour. 
+  dup 1 hours + ... [: t1 <= ;] take-while \ t0, t0+1hr, t0+2hr ... 
+  [: dup h #! ;] reduce 
+  h 
+;
+
+: time-column ( dt0 dt1 -- # ) { dt0 dt1 } 
+  now dt0 - 
+  now dt1 + 
+    time-column
+;
+
+: convert [: ;] apply-t ;
+
+\ Extracts and processess energy-ile-de-france-live and live wind datasets. 
+: script
+
+   "0.00" %n   \ output 2 decimal places
+
+   {{
+
+    \ ====== !!! IMPORTANT READ ME !!! ======
+    \ Column 1: The time base here drives the rest of the columns.
+    \ By default this is from T-30days to T+18 hours.
+    \ The final point, (T+18 hours) is VERY IMPORTANT, as it 
+    \ determines the final prediction T+. If your highest T+
+    \ value on weather is T+18, then leave this as it is. 
+    \ Otherwise, adjust to match your T+.
+    2 days 22 hours time-column
+    
+    \ ====== !!! IMPORTANT READ ME !!! ======
+    \ Second column - the energy production for Ile de France
+    \ A "previous" interpolation is done just in case this data is empty.
+    \ You MUST interpolate or risk default values being inserted instead! 
+    $energy-ile-de-france-live 72 hours previous interpolate
+
+    \ ====== !!! IMPORTANT READ ME !!! ======
+    \ Other columns - the wind speed forecasts for various regions
+    \ You need to adjust as per your extraction scripts. 
+    $speed-guitrancourt-live
+    \ $speed-lieusaint-live
+    \ $speed-lvs-pussay-live
+    $speed-parc-du-gatinais-live 
+    \ $speed-arville-live
+    \ $speed-boissy-la-riviere-live 
+    \ $speed-angerville-1-live
+    \ $speed-angerville-2-live
+
+    \ $direction-guitrancourt-live 
+    \ $direction-lieusaint-live 
+    \ $direction-lvs-pussay-live 
+    \ $direction-parc-du-gatinais-live 
+    \ $direction-arville-live 
+    \ $direction-boissy-la-riviere-live 
+    \ $direction-angerville-1-live 
+    \ $direction-angerville-2-live 
+ 
+    \ The "B" Weather model is frequently poorly updated. 
+    \ $speed-guitrancourt-b-live 
+    $speed-lieusaint-b-live 
+    \ $speed-lvs-pussay-b-live 
+    \ $speed-parc-du-gatinais-b-live 
+    \ $speed-arville-b-live 
+    \ $speed-boissy-la-riviere-b-live 
+    \ $speed-angerville-1-b-live 
+    \ $speed-angerville-2-b-live 
+    
+    \ $direction-guitrancourt-b-live 
+    \ $direction-lieusaint-b-live 
+    \ $direction-lvs-pussay-b-live 
+    \ $direction-parc-du-gatinais-b-live 
+    \ $direction-arville-b-live 
+    \ $direction-boissy-la-riviere-b-live 
+    \ $direction-angerville-1-b-live 
+    \ $direction-angerville-2-b-live  
+    
+    $energy-ile-de-france-live convert
+    $energy-ile-de-france-live convert
+    
+   }} "0" >csv
+;

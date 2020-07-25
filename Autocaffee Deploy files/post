@@ -1,0 +1,17 @@
+\
+\ @author: Arnold Doray
+\ @date: 19 Jul 2020
+\
+\ Model post-processing
+\
+
+
+\ word to run denormalizing and other post-processing. 
+\ This word only accepts 1 number and should return 1 number. 
+: run ( n -- n )
+  \ you should copy your TO-ENERGY code here
+  17540.726726437224 { mean }
+  19128.52233540229 { sd }
+  sd *. mean +. 0 max 72000 min
+
+;

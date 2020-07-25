@@ -1,0 +1,55 @@
+\
+\ @author: Arnold Doray
+\ @date: 19 Jul 2020
+\
+\ Data normalization. DO NOT put stats or persistence calculations. 
+\
+
+\ Important: You need to change this! 
+: normalize-energy ( seq -- seq ) cols
+  17542.619668017756 { m }
+  19134.131586041487 { sd }
+  [: m -. sd /. ;] map
+;
+ 
+ 
+: normalize-wind1 ( seq -- seq ) cols
+   3.472311770943793 { m }
+   1.7718232226537023 { sd }
+  [: m -. sd /. ;] map
+;
+
+: normalize-wind2 ( seq -- seq ) cols
+   3.4819762845849835 { m }
+   1.7334708809270913 { sd }
+  [: m -. sd /. ;] map
+;
+
+: normalize-wind3 ( seq -- seq ) cols
+   3.9490179633021527 { m }
+   2.0257452869910804 { sd }
+  [: m -. sd /. ;] map
+;
+
+
+: month cols [: round month ;] map ;
+: hour cols [: round hour ;] map ;
+
+: run
+
+  \ Delete synthetic time column
+  A: del
+  
+  \ At this point, all columns are moved left, 
+  \ so previous B: is A:. This makes it similar
+  \ to your current prep.m from P003.
+
+  \ Normalize 1nd and 2nd columns
+  2: normalize-energy 1: update
+  3: normalize-wind1 2: update
+  4: normalize-wind2 3: update
+  5: normalize-wind3 4: update
+  6: month 5: update
+  7: hour 6: update
+;
+
